@@ -1,0 +1,21 @@
+{
+	"key": "some.metric.name",
+	"at": "2015-04-13T15:23:36.760Z",
+	"value": 42.1
+}
+{
+	"key": "some.metric.name",
+	"at": "2015-04-13T15:25:36.760Z",
+	"value": 42.8
+}
+{
+	"key": "some.metric.name",
+	"at": "2015-04-13T15:25:36.760Z",
+	"value": 42.8
+}
+...
+{
+	"key": "some.metric.name",
+	"at": "2015-04-13T15:25:36.760Z",
+	"value": 42.8
+}
