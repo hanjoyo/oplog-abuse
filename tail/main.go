@@ -17,7 +17,7 @@ type Oplog struct {
 	Operation    string              `bson:"op"`
 	Namespace    string              `bson:"ns"`
 	Object       bson.M              `bson:"o"`
-	QueryObject  bson.Raw            `bson:"o2"`
+	QueryObject  bson.M              `bson:"o2"`
 }
 
 var (
@@ -46,7 +46,7 @@ func main() {
 
 	iter := sess.DB("local").
 		C("oplog.rs").
-		Find(bson.M{"ts": bson.M{"$gte": lo.Timestamp}}).
+		Find(bson.M{"ts": bson.M{"$gte": lo.Timestamp}}). // can filter the query even more: certain ns or operations
 		Sort("$natural").
 		LogReplay().
 		Tail(-1) // tail forever
