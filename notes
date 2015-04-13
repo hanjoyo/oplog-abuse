@@ -1,0 +1,24 @@
+// OPLOG
+
+// show off that creating an index shows up in oplog
+db.raw.ensureIndex({key: 1})
+
+// show off no indexes
+local.oplog.rs.getIndexes()
+db.raw.getIndexes()
+
+// just data - mongodump
+mongodump -d local -c oplog.rs
+bsondump oplog.rs.bson
+
+// capped collection
+db.oplog.rs.isCapped()
+
+/////////////
+// wiredTiger
+
+// single file for data, but many files for indexes
+
+//////////////
+// TIME SERIES
+
