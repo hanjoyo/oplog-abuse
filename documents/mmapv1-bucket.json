@@ -1,0 +1,33 @@
+{
+	"key": "some.metric.name",
+	"at": 1428937200000,
+	"values":{
+		0: {
+			0: null,
+			1: null,
+			2: null,
+
+
+			59: null
+		},
+		1:{
+			0: 42.0,
+			1: null,
+			2: null,
+
+
+			59: null
+		},
+
+
+
+		59: {
+			0: null,
+			1: null,
+			2: null,
+
+
+			59: null
+		}
+	}
+}
