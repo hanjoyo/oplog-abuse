@@ -1,0 +1,278 @@
+#!/bin/bash
+
+sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 7F0CEB10
+echo "deb http://repo.mongodb.org/apt/ubuntu "$(lsb_release -sc)"/mongodb-org/3.0 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-3.0.list
+sudo apt-get update
+sudo apt-get install -y mongodb-org
+
+sudo stop mongod
+sudo rm /etc/init/mongod.conf
+sudo rm /etc/mongod.conf
+
+sudo cat > /etc/init/mongod1.conf <<"EOF"
+# Recommended ulimit values for mongod or mongos
+# See http://docs.mongodb.org/manual/reference/ulimit/#recommended-settings
+#
+limit fsize unlimited unlimited
+limit cpu unlimited unlimited
+limit as unlimited unlimited
+limit nofile 64000 64000
+limit rss unlimited unlimited
+limit nproc 32000 32000
+
+kill timeout 300 # wait 300s between SIGTERM and SIGKILL.
+
+pre-start script
+  DAEMONUSER=${DAEMONUSER:-mongodb}
+  if [ ! -d /var/lib/mongodb1 ]; then
+    mkdir -p /var/lib/mongodb1 && chown mongodb:mongodb /var/lib/mongodb1
+  fi
+  if [ ! -d /var/log/mongodb1 ]; then
+    mkdir -p /var/log/mongodb1 && chown mongodb:mongodb /var/log/mongodb1
+  fi
+  touch /var/run/mongodb1.pid
+  chown $DAEMONUSER /var/run/mongodb1.pid
+end script
+
+start on runlevel [2345]
+stop on runlevel [06]
+
+script
+  ENABLE_MONGOD="yes"
+  CONF=/etc/mongod1.conf
+  DAEMON=/usr/bin/mongod
+  DAEMONUSER=${DAEMONUSER:-mongodb}
+
+  if [ -f /etc/default/mongod ]; then . /etc/default/mongod; fi
+
+  # Handle NUMA access to CPUs (SERVER-3574)
+  # This verifies the existence of numactl as well as testing that the command works
+  NUMACTL_ARGS="--interleave=all"
+  if which numactl >/dev/null 2>/dev/null && numactl $NUMACTL_ARGS ls / >/dev/null 2>/dev/null
+  then
+    NUMACTL="$(which numactl) -- $NUMACTL_ARGS"
+    DAEMON_OPTS=${DAEMON_OPTS:-"--config $CONF"}
+  else
+    NUMACTL=""
+    DAEMON_OPTS="-- "${DAEMON_OPTS:-"--config $CONF"}
+  fi
+
+  if [ "x$ENABLE_MONGOD" = "xyes" ]
+  then
+    exec start-stop-daemon --start \
+        --chuid $DAEMONUSER \
+        --pidfile /var/run/mongodb1.pid \
+        --make-pidfile \
+        --exec $NUMACTL $DAEMON $DAEMON_OPTS
+  fi
+end script
+EOF
+
+sudo cat > /etc/init/mongod2.conf <<"EOF"
+# Recommended ulimit values for mongod or mongos
+# See http://docs.mongodb.org/manual/reference/ulimit/#recommended-settings
+#
+limit fsize unlimited unlimited
+limit cpu unlimited unlimited
+limit as unlimited unlimited
+limit nofile 64000 64000
+limit rss unlimited unlimited
+limit nproc 32000 32000
+
+kill timeout 300 # wait 300s between SIGTERM and SIGKILL.
+
+pre-start script
+  DAEMONUSER=${DAEMONUSER:-mongodb}
+  if [ ! -d /var/lib/mongodb2 ]; then
+    mkdir -p /var/lib/mongodb2 && chown mongodb:mongodb /var/lib/mongodb2
+  fi
+  if [ ! -d /var/log/mongodb2 ]; then
+    mkdir -p /var/log/mongodb2 && chown mongodb:mongodb /var/log/mongodb2
+  fi
+  touch /var/run/mongodb2.pid
+  chown $DAEMONUSER /var/run/mongodb2.pid
+end script
+
+start on runlevel [2345]
+stop on runlevel [06]
+
+script
+  ENABLE_MONGOD="yes"
+  CONF=/etc/mongod2.conf
+  DAEMON=/usr/bin/mongod
+  DAEMONUSER=${DAEMONUSER:-mongodb}
+
+  if [ -f /etc/default/mongod ]; then . /etc/default/mongod; fi
+
+  # Handle NUMA access to CPUs (SERVER-3574)
+  # This verifies the existence of numactl as well as testing that the command works
+  NUMACTL_ARGS="--interleave=all"
+  if which numactl >/dev/null 2>/dev/null && numactl $NUMACTL_ARGS ls / >/dev/null 2>/dev/null
+  then
+    NUMACTL="$(which numactl) -- $NUMACTL_ARGS"
+    DAEMON_OPTS=${DAEMON_OPTS:-"--config $CONF"}
+  else
+    NUMACTL=""
+    DAEMON_OPTS="-- "${DAEMON_OPTS:-"--config $CONF"}
+  fi
+
+  if [ "x$ENABLE_MONGOD" = "xyes" ]
+  then
+    exec start-stop-daemon --start \
+        --chuid $DAEMONUSER \
+        --pidfile /var/run/mongodb2.pid \
+        --make-pidfile \
+        --exec $NUMACTL $DAEMON $DAEMON_OPTS
+  fi
+end script
+EOF
+
+sudo cat > /etc/init/mongod3.conf <<"EOF"
+# Recommended ulimit values for mongod or mongos
+# See http://docs.mongodb.org/manual/reference/ulimit/#recommended-settings
+#
+limit fsize unlimited unlimited
+limit cpu unlimited unlimited
+limit as unlimited unlimited
+limit nofile 64000 64000
+limit rss unlimited unlimited
+limit nproc 32000 32000
+
+kill timeout 300 # wait 300s between SIGTERM and SIGKILL.
+
+pre-start script
+  DAEMONUSER=${DAEMONUSER:-mongodb}
+  if [ ! -d /var/lib/mongodb3 ]; then
+    mkdir -p /var/lib/mongodb3 && chown mongodb:mongodb /var/lib/mongodb3
+  fi
+  if [ ! -d /var/log/mongodb3 ]; then
+    mkdir -p /var/log/mongodb3 && chown mongodb:mongodb /var/log/mongodb3
+  fi
+  touch /var/run/mongodb3.pid
+  chown $DAEMONUSER /var/run/mongodb3.pid
+end script
+
+start on runlevel [2345]
+stop on runlevel [06]
+
+script
+  ENABLE_MONGOD="yes"
+  CONF=/etc/mongod3.conf
+  DAEMON=/usr/bin/mongod
+  DAEMONUSER=${DAEMONUSER:-mongodb}
+
+  if [ -f /etc/default/mongod ]; then . /etc/default/mongod; fi
+
+  # Handle NUMA access to CPUs (SERVER-3574)
+  # This verifies the existence of numactl as well as testing that the command works
+  NUMACTL_ARGS="--interleave=all"
+  if which numactl >/dev/null 2>/dev/null && numactl $NUMACTL_ARGS ls / >/dev/null 2>/dev/null
+  then
+    NUMACTL="$(which numactl) -- $NUMACTL_ARGS"
+    DAEMON_OPTS=${DAEMON_OPTS:-"--config $CONF"}
+  else
+    NUMACTL=""
+    DAEMON_OPTS="-- "${DAEMON_OPTS:-"--config $CONF"}
+  fi
+
+  if [ "x$ENABLE_MONGOD" = "xyes" ]
+  then
+    exec start-stop-daemon --start \
+        --chuid $DAEMONUSER \
+        --pidfile /var/run/mongodb3.pid \
+        --make-pidfile \
+        --exec $NUMACTL $DAEMON $DAEMON_OPTS
+  fi
+end script
+EOF
+
+sudo cat > /etc/mongod1.conf <<"EOF"
+systemLog:
+   destination: file
+   path: "/var/log/mongodb1/mongo.log"
+   quiet: true
+   logAppend: true
+storage:
+  engine: "wiredTiger"
+  dbPath: "/var/lib/mongodb1"
+net:
+   port: 27017
+replication:
+   replSetName: "rs"
+EOF
+
+sudo cat > /etc/mongod2.conf <<"EOF"
+systemLog:
+   destination: file
+   path: "/var/log/mongodb2/mongo.log"
+   quiet: true
+   logAppend: true
+storage:
+   smallFiles: true
+   journal:
+      enabled: true
+   dbPath: "/var/lib/mongodb2"
+net:
+   port: 27018
+replication:
+   replSetName: "rs"
+EOF
+
+sudo cat > /etc/mongod3.conf <<"EOF"
+systemLog:
+   destination: file
+   path: "/var/log/mongodb3/mongo.log"
+   quiet: true
+   logAppend: true
+storage:
+   smallFiles: true
+   journal:
+      enabled: true
+   dbPath: "/var/lib/mongodb3"
+net:
+   port: 27019
+replication:
+   replSetName: "rs"
+EOF
+
+if test -f /sys/kernel/mm/transparent_hugepage/enabled; then
+  echo never > /sys/kernel/mm/transparent_hugepage/enabled
+fi
+
+if test -f /sys/kernel/mm/transparent_hugepage/defrag; then
+   echo never > /sys/kernel/mm/transparent_hugepage/defrag
+fi
+
+
+sudo start mongod1
+sudo start mongod2
+sudo start mongod3
+
+echo "Waiting for replica set..."
+sleep 10
+
+mongo --host 127.0.0.1 <<"EOF"
+var cfg = {
+    "_id": "rs",
+    "version": 1,
+    "members": [
+        {
+            "_id": 0,
+            "host": "127.0.0.1:27017",
+            "priority": 1
+        },
+        {
+            "_id": 1,
+            "host": "127.0.0.1:27018",
+            "priority": .5
+        },
+        {
+            "_id": 2,
+            "host": "127.0.0.1:27019",
+            "priority": .5
+        }
+    ]
+};
+rs.initiate(cfg);
+rs.reconfig(cfg)
+EOF
