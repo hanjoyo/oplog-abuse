@@ -22,3 +22,4 @@ db.oplog.rs.isCapped()
 //////////////
 // TIME SERIES
 
+db.raw.update({key: 'some.metric', at: ~~(Date.now() / 1000 / 3600) * 1000 * 3600}, {$push:{values:{at:new Date(), value: 42.0}}}, {upsert: true})
